@@ -1,0 +1,6 @@
+.vscode/
+build/
+src/*.o
+tests/*.o
+tags
+
