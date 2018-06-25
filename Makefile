@@ -1,23 +1,24 @@
-CFLAGS=-g -O2 -Wall -Wextra -Isrc -I/usr/local/include/lcthw/ -rdynamic -DNDEBUG $(OPTFLAGS)
-LDLIBS=/usr/local/lib/liblcthw.a -lm $(OPTLIBS)
+CFLAGS=-g -O2 -Wall -Wextra -I/usr/local/include -Isrc -rdynamic $(OPTFLAGS)
+LIBS=-llcthw -lm $(OPTLIBS)
+LDFLAGS=-L/usr/local/lib $(LIBS)
 PREFIX?=/usr/local
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
-PROGRAM_SRC=$(wildcard bin/**/*.c bin/*.c)
-PROGRAMS=$(patsubst %.c,%,$(PROGRAM_SRC))
 
 TEST_SRC=$(wildcard tests/*_tests.c)
 TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
-TARGET=build/libstatserver.a
+TARGET=build/libstatserve.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 
 # The Target Build
-all: $(TARGET) $(SO_TARGET) $(PROGRAMS) tests
+all: $(TARGET) $(SO_TARGET) tests bin/statserver
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
+
+bin/statserver: $(TARGET)
 
 $(TARGET): CFLAGS += -fPIC
 $(TARGET): build $(OBJECTS)
@@ -25,9 +26,7 @@ $(TARGET): build $(OBJECTS)
 	ranlib $@
 
 $(SO_TARGET): $(TARGET) $(OBJECTS)
-	$(CC) -shared -o $@ $(OBJECTS)
-
-$(PROGRAMS): LDLIBS += $(TARGET)
+	$(CC) -shared -o $@ $(LDFLAGS) $(LIBS) $(OBJECTS)
 
 build:
 	@mkdir -p build
@@ -41,7 +40,7 @@ tests: $(TESTS)
 
 # The Cleaner
 clean:
-	rm -rf build $(OBJECTS) $(TESTS) $(PROGRAMS)
+	rm -rf build $(OBJECTS) $(TESTS)
 	rm -f tests/tests.log 
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
