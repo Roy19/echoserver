@@ -25,5 +25,7 @@ int writeSome(RingBuffer * buff, int fd, int is_socket);
 void child_handler(int s);
 void * get_in_addr(struct sockaddr * sa);
 int set_non_block(int fd);
+void serve_connection(int child_fd);
+int echo_server(const char * host, const char * port);
 
 #endif
