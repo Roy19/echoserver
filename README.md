@@ -4,6 +4,6 @@ A simple statistics server.
 Project is built upon my **liblcthw**
 
 ## Dependencies
-[x] liblcthw
-[x] bstrlib
+* [x] liblcthw
+* [x] bstrlib
 
