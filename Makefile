@@ -13,12 +13,12 @@ TARGET=build/libechoserve.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 
 # The Target Build
-all: $(TARGET) $(SO_TARGET) tests bin/echoserver
+all: $(TARGET) $(SO_TARGET) bin/echo_server tests
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
 
-bin/echoserver: $(TARGET)
+bin/echo_server: $(TARGET)
 
 $(TARGET): CFLAGS += -fPIC
 $(TARGET): build $(OBJECTS)
